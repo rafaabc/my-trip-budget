@@ -105,6 +105,7 @@ Tests are located in `tests/unit/` and mirror the `src/services/` structure. Eac
 | User Story | Coverage |
 |---|---|
 | US-01 / SCRUM-5 — User Registration | AC1 (201 created), AC2 (409 duplicate), AC3 (400 short password), BRs, required-field validation |
+| US-02 / SCRUM-6 — User Login | AC1 (200 + token), AC2/BR1 (401 invalid credentials), AC3 (400 missing fields), AC4 (JWT payload shape) |
 
 ## File Structure
 
@@ -133,7 +134,8 @@ myTripBudget/
 │   └── swagger.json           # OpenAPI specification
 ├── tests/
 │   └── unit/
-│       └── user.service.test.js  # Unit tests for user registration (US-01)
+│       ├── user.service.test.js       # Unit tests for user registration (US-01)
+│       └── user.login.service.test.js # Unit tests for user login (US-02)
 ├── .env.example               # Environment variable template
 └── package.json
 ```
