@@ -46,7 +46,7 @@ Layered Express + Mongoose REST API. Request flow: `routes → controllers → s
 - **Mock pattern**: `jest.mock('../../src/models/<model>')` for Mongoose; `jest.mock('bcryptjs')` / `jest.mock('jsonwebtoken')` for external libs.
 - **Error assertions**: `expect(fn()).rejects.toMatchObject({ status: <n>, message: '<str>' })`.
 - **Naming**: each `it` description carries an AC suffix (e.g. `(AC1)`, `(AC2)`) for traceability to the User Story.
-- **Test files**: `user.service.test.js` (US-01), `user.login.service.test.js` (US-02), `trip.service.test.js` (US-03).
+- **Test files**: `user.service.test.js` (US-01), `user.login.service.test.js` (US-02), `trip.service.test.js` (US-03), `trip.list.service.test.js` (US-04).
 
 ## User Story Workflow (Jira → Code)
 

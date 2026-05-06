@@ -106,7 +106,8 @@ Tests are located in `tests/unit/` and mirror the `src/services/` structure. Eac
 |---|---|
 | US-01 / SCRUM-5 — User Registration | AC1 (201 created), AC2 (409 duplicate), AC3 (400 short password), BRs, required-field validation |
 | US-02 / SCRUM-6 — User Login | AC1 (200 + token), AC2/BR1 (401 invalid credentials), AC3 (400 missing fields), AC4 (JWT payload shape) |
-| US-03 / SCRUM-9 — Trip Registration | AC1 (201 created, userId scoped), AC2 (400 missing fields, 400 invalid date), AC3 (422 returnDate ≤ departureDate), AC4 (list trips, sorted, multi-trip), BR1–BR4 |
+| US-03 / SCRUM-9 — Trip Registration | AC1 (201 created, userId scoped), AC2 (400 missing fields, 400 invalid date), AC3 (422 returnDate ≤ departureDate), BR1–BR3 |
+| US-04 / SCRUM-10 — Trip List | AC1 (200 + user-scoped list), AC2 (trip shape: title, departureDate, returnDate), AC4 (empty array), BR1 (only user's trips), BR2 (newest-first order) |
 
 ## File Structure
 
@@ -137,7 +138,8 @@ myTripBudget/
 │   └── unit/
 │       ├── user.service.test.js       # Unit tests for user registration (US-01)
 │       ├── user.login.service.test.js # Unit tests for user login (US-02)
-│       └── trip.service.test.js       # Unit tests for trip registration (US-03)
+│       ├── trip.service.test.js       # Unit tests for trip registration (US-03)
+│       └── trip.list.service.test.js  # Unit tests for trip list (US-04)
 ├── .env.example               # Environment variable template
 └── package.json
 ```
