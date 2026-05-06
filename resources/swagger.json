@@ -1,0 +1,307 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "MyTripBudget API",
+    "version": "1.0.0",
+    "description": "REST API for managing trips and travel budgets"
+  },
+  "servers": [
+    { "url": "http://localhost:3000" }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "UserRegisterRequest": {
+        "type": "object",
+        "required": ["username", "password", "fullName"],
+        "properties": {
+          "username": { "type": "string", "example": "john_doe" },
+          "password": { "type": "string", "minLength": 8, "example": "secret123" },
+          "fullName": { "type": "string", "example": "John Doe" }
+        }
+      },
+      "UserResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "example": "64a1b2c3d4e5f6a7b8c9d0e1" },
+          "username": { "type": "string", "example": "john_doe" },
+          "fullName": { "type": "string", "example": "John Doe" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "required": ["username", "password"],
+        "properties": {
+          "username": { "type": "string", "example": "john_doe" },
+          "password": { "type": "string", "example": "secret123" }
+        }
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "token": { "type": "string", "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." }
+        }
+      },
+      "TripRequest": {
+        "type": "object",
+        "required": ["title", "departureDate", "returnDate"],
+        "properties": {
+          "title": { "type": "string", "example": "Paris 2025" },
+          "departureDate": { "type": "string", "format": "date", "example": "2025-06-01" },
+          "returnDate": { "type": "string", "format": "date", "example": "2025-06-15" }
+        }
+      },
+      "TripResponse": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "example": "64a1b2c3d4e5f6a7b8c9d0e2" },
+          "userId": { "type": "string", "example": "64a1b2c3d4e5f6a7b8c9d0e1" },
+          "title": { "type": "string", "example": "Paris 2025" },
+          "departureDate": { "type": "string", "format": "date-time" },
+          "returnDate": { "type": "string", "format": "date-time" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "message": { "type": "string" }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/api/users/register": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Register a new user",
+        "description": "Creates a new user account. Username must be unique and password must be at least 8 characters. (SCRUM-5)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UserRegisterRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UserResponse" }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing required fields or password too short",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "examples": {
+                  "missingFields": { "value": { "message": "username, password, and fullName are required" } },
+                  "shortPassword": { "value": { "message": "Password must be at least 8 characters" } }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Username already taken",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "example": { "message": "Username already taken" }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/login": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Login and get JWT token",
+        "description": "Authenticates a registered user and returns a JWT token for subsequent requests. (SCRUM-6)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/LoginRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful, returns JWT token",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/LoginResponse" }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing required fields",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "example": { "message": "username and password are required" }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "example": { "message": "Invalid credentials" }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/trips": {
+      "post": {
+        "tags": ["Trips"],
+        "summary": "Create a new trip",
+        "description": "Creates a trip record associated with the authenticated user. Return date must be after departure date. (SCRUM-9)",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/TripRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Trip created successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/TripResponse" }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing required fields or invalid date format",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "examples": {
+                  "missingFields": { "value": { "message": "title, departureDate, and returnDate are required" } },
+                  "invalidDate": { "value": { "message": "departureDate is not a valid date" } }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token not provided",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "example": { "message": "Token not provided" }
+              }
+            }
+          },
+          "403": {
+            "description": "Invalid or expired token",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "example": { "message": "Invalid or expired token" }
+              }
+            }
+          },
+          "422": {
+            "description": "Return date is not after departure date",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "example": { "message": "returnDate must be after departureDate" }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Trips"],
+        "summary": "List authenticated user's trips",
+        "description": "Returns all trips belonging to the authenticated user, sorted by departure date descending (most recent first). (SCRUM-10)",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "List of trips (empty array if none registered)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/TripResponse" }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Token not provided",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "example": { "message": "Token not provided" }
+              }
+            }
+          },
+          "403": {
+            "description": "Invalid or expired token",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "example": { "message": "Invalid or expired token" }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
