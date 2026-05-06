@@ -22,6 +22,7 @@ myTripBudget is a Node.js REST API that allows users to register, authenticate, 
 | dotenv | ^17.4.2 | Environment variable loading |
 | swagger-ui-express | ^5.0.1 | Interactive API docs |
 | nodemon | ^3.1.14 | Dev auto-reload (devDependency) |
+| jest | ^29.7.0 | Unit test runner (devDependency) |
 
 ## Installation and Setup
 
@@ -58,6 +59,11 @@ myTripBudget is a Node.js REST API that allows users to register, authenticate, 
 
    Swagger UI will be available at `http://localhost:<PORT>/api-docs`.
 
+6. Run the unit tests:
+   ```bash
+   npm test
+   ```
+
 ## Features
 
 ### Users
@@ -85,6 +91,21 @@ All trip endpoints require a `Authorization: Bearer <token>` header.
 }
 ```
 
+## Tests
+
+Unit tests cover the service layer (business logic) using Jest. No real database or HTTP server is required.
+
+```bash
+npm test          # run all unit tests
+npm run test:watch  # watch mode
+```
+
+Tests are located in `tests/unit/` and mirror the `src/services/` structure. Each test case is annotated with the User Story acceptance criterion it covers (e.g. `AC1`, `AC2`, `AC3`).
+
+| User Story | Coverage |
+|---|---|
+| US-01 / SCRUM-5 — User Registration | AC1 (201 created), AC2 (409 duplicate), AC3 (400 short password), BRs, required-field validation |
+
 ## File Structure
 
 ```
@@ -110,6 +131,9 @@ myTripBudget/
 │       └── auth.middleware.js # JWT verification — attaches req.user on success
 ├── resources/
 │   └── swagger.json           # OpenAPI specification
+├── tests/
+│   └── unit/
+│       └── user.service.test.js  # Unit tests for user registration (US-01)
 ├── .env.example               # Environment variable template
 └── package.json
 ```
