@@ -6,7 +6,7 @@
     "description": "REST API for managing trips and travel budgets"
   },
   "servers": [
-    { "url": "http://localhost:3000" }
+    { "url": "/" }
   ],
   "components": {
     "securitySchemes": {
