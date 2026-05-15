@@ -1,0 +1,42 @@
+{
+  "missingFieldCases": [
+    {
+      "tc": "TC-007-1",
+      "description": "empty body",
+      "payload": {},
+      "expectedStatus": 400
+    },
+    {
+      "tc": "TC-007-2",
+      "description": "only username provided (password missing)",
+      "payload": { "username": "only_user", "fullName": "Only User" },
+      "expectedStatus": 400
+    },
+    {
+      "tc": "TC-007-3",
+      "description": "only password provided (username missing)",
+      "payload": { "password": "validpass1", "fullName": "Only Pass" },
+      "expectedStatus": 400
+    }
+  ],
+  "blankFieldCases": [
+    {
+      "tc": "TC-008-1",
+      "description": "blank username",
+      "payload": { "username": "", "password": "validpass1", "fullName": "Blank User" },
+      "expectedStatus": 400
+    },
+    {
+      "tc": "TC-008-2",
+      "description": "blank password",
+      "payload": { "username": "valid_user", "password": "", "fullName": "Valid User" },
+      "expectedStatus": 400
+    },
+    {
+      "tc": "TC-008-3",
+      "description": "whitespace-only username",
+      "payload": { "username": "   ", "password": "validpass1", "fullName": "Whitespace User" },
+      "expectedStatus": 400
+    }
+  ]
+}

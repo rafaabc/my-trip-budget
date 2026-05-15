@@ -3,11 +3,13 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user.model');
 
 async function register({ username, password, fullName }) {
-  if (!username || !password || !fullName) {
+  const trimmedUsername = typeof username === 'string' ? username.trim() : username;
+  if (!trimmedUsername || !password || !fullName) {
     const err = new Error('username, password, and fullName are required');
     err.status = 400;
     throw err;
   }
+  username = trimmedUsername;
 
   if (password.length < 8) {
     const err = new Error('Password must be at least 8 characters');
