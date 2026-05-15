@@ -8,6 +8,7 @@
     "dev": "nodemon src/server.js",
     "test": "jest",
     "test:watch": "jest --watch",
+    "test:unit:coverage": "jest --coverage",
     "test:api": "mocha",
     "test:api:report": "mocha --reporter mochawesome --reporter-options reportDir=reports,reportFilename=report,overwrite=true"
   },
@@ -16,7 +17,26 @@
     "testMatch": [
       "**/tests/unit/**/*.test.js"
     ],
-    "clearMocks": true
+    "clearMocks": true,
+    "coverageProvider": "v8",
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/server.js"
+    ],
+    "coverageDirectory": "reports/coverage",
+    "coverageReporters": [
+      "text",
+      "lcov",
+      "html"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "statements": 95,
+        "branches": 95,
+        "functions": 95,
+        "lines": 95
+      }
+    }
   },
   "repository": {
     "type": "git",

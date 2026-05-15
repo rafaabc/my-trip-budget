@@ -84,6 +84,23 @@ describe('userService.login (US-02 / SCRUM-6)', () => {
     });
   });
 
+  describe('AC4: JWT_EXPIRES_IN fallback', () => {
+    it('uses default expiresIn "1h" when JWT_EXPIRES_IN is not set (AC4)', async () => {
+      delete process.env.JWT_EXPIRES_IN;
+      User.findOne.mockResolvedValue(storedUser);
+      bcrypt.compare.mockResolvedValue(true);
+      jwt.sign.mockReturnValue('signed-token');
+
+      await userService.login(validPayload);
+
+      expect(jwt.sign).toHaveBeenCalledWith(
+        { sub: 'user-id-abc', username: 'john_doe' },
+        'test-secret',
+        { expiresIn: '1h' }
+      );
+    });
+  });
+
   describe('AC3: missing required fields return 400', () => {
     it.each([
       ['username', { password: 'secret123' }],
