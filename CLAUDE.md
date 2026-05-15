@@ -80,7 +80,7 @@ When the user says **"vamos seguir com o PR"** (or equivalent signals like "let'
 
 1. Review all changes implemented since the last PR.
 2. Update **`CLAUDE.md`** if any convention, command, architecture detail, or workflow changed.
-3. Update **`README.md`** if any user-facing detail changed (setup steps, available scripts, CI badges, etc.).
+3. If **`README.md`** may need changes, **show the proposed updates to the user and wait for approval** before applying them — do not update README autonomously.
 4. Commit the doc updates together with the feature, or as a separate commit before opening the PR.
 5. Then create the PR referencing the relevant issue/US.
 
