@@ -2,6 +2,8 @@
 
 > REST API for managing personal trip records with JWT-based authentication.
 
+[![Backend Tests](https://github.com/rafaabc/myTripBudget/actions/workflows/backend.yml/badge.svg)](https://github.com/rafaabc/myTripBudget/actions/workflows/backend.yml)
+
 ## Description
 
 myTripBudget is a Node.js REST API that allows users to register, authenticate, and manage their travel trips. Built with Express.js and MongoDB (Mongoose), it provides a secure, token-protected interface for creating and listing trips. Interactive API documentation is available via Swagger UI.
@@ -121,6 +123,22 @@ npm run test:api:report  # HTML report → reports/report.html
 ```
 
 Tests are in `tests/api/`. All test data is prefixed `apitest_` and cleaned up automatically after each run.
+
+## CI/CD
+
+GitHub Actions runs automatically on every push and pull request to `main` via `.github/workflows/backend.yml`:
+
+| Job | What runs | Artifacts |
+|---|---|---|
+| Unit Tests | `npm run test:unit:coverage` (Jest + c8) | `coverage-report` (14 days) |
+| API Tests | `npm run test:api:report` (Mocha + Supertest + MongoDB) | `api-test-report` (14 days) |
+
+The API test job spins up a MongoDB 7 service container and starts the Express server before running the suite. Artifacts (coverage HTML + Mochawesome report) are uploaded even on failure.
+
+To run with coverage locally:
+```bash
+npm run test:unit:coverage   # HTML report → reports/coverage/
+```
 
 ## File Structure
 

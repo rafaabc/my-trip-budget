@@ -5,10 +5,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-npm start        # production: node src/server.js
-npm run dev      # development with auto-reload: nodemon src/server.js
-npm test         # unit tests: jest
-npm run test:watch  # jest in watch mode
+npm start                  # production: node src/server.js
+npm run dev                # development with auto-reload: nodemon src/server.js
+npm test                   # unit tests: jest
+npm run test:watch         # jest in watch mode
+npm run test:unit:coverage # unit tests + c8 coverage → reports/coverage/
+npm run test:api           # API tests: mocha (server must be running)
+npm run test:api:report    # API tests + Mochawesome HTML report → reports/
 ```
 
 API docs available at `http://localhost:<PORT>/api-docs` (Swagger UI) once the server is running.
@@ -70,6 +73,16 @@ When implementing a US from Jira (project **SCRUM**, site `faelsabc21.atlassian.
 4. Add/extend unit tests covering each AC and BR.
 5. Update `resources/swagger.json` if the API surface changes; reference the SCRUM key in the endpoint `description` (e.g. `"(SCRUM-5)"`).
 6. Branch: `feature/scrum-<n>-<slug>`. Commit and open a PR against `main` referencing the US.
+
+## PR Workflow
+
+When the user says **"vamos seguir com o PR"** (or equivalent signals like "let's open the PR", "create the PR"):
+
+1. Review all changes implemented since the last PR.
+2. Update **`CLAUDE.md`** if any convention, command, architecture detail, or workflow changed.
+3. Update **`README.md`** if any user-facing detail changed (setup steps, available scripts, CI badges, etc.).
+4. Commit the doc updates together with the feature, or as a separate commit before opening the PR.
+5. Then create the PR referencing the relevant issue/US.
 
 ## Key Conventions
 
