@@ -1,0 +1,63 @@
+{
+  "validTrip": {
+    "title": "Paris 2025",
+    "departureDate": "2025-07-01",
+    "returnDate": "2025-07-15"
+  },
+  "tokyoTrip": {
+    "title": "Tokyo Trip",
+    "departureDate": "2025-09-01",
+    "returnDate": "2025-09-14"
+  },
+  "missingFieldCases": [
+    {
+      "tc": "TC-020",
+      "description": "missing title",
+      "payload": { "departureDate": "2025-07-01", "returnDate": "2025-07-15" },
+      "expectedStatus": 400
+    },
+    {
+      "tc": "TC-021",
+      "description": "missing departureDate",
+      "payload": { "title": "Trip A", "returnDate": "2025-07-15" },
+      "expectedStatus": 400
+    },
+    {
+      "tc": "TC-022",
+      "description": "missing returnDate",
+      "payload": { "title": "Trip B", "departureDate": "2025-07-01" },
+      "expectedStatus": 400
+    }
+  ],
+  "dateBoundaryCases": [
+    {
+      "tc": "TC-023",
+      "description": "returnDate before departureDate",
+      "payload": { "title": "Invalid Trip", "departureDate": "2025-07-15", "returnDate": "2025-07-01" },
+      "expectedStatus": 422
+    },
+    {
+      "tc": "TC-024-equal",
+      "description": "returnDate equals departureDate",
+      "payload": { "title": "Same Day Trip", "departureDate": "2025-08-10", "returnDate": "2025-08-10" },
+      "expectedStatus": 422
+    },
+    {
+      "tc": "TC-024-next",
+      "description": "returnDate one day after departureDate (boundary accepted)",
+      "payload": { "title": "Next Day Trip", "departureDate": "2025-08-10", "returnDate": "2025-08-11" },
+      "expectedStatus": 201
+    }
+  ],
+  "multipleTrips": [
+    { "title": "Trip Rome",     "departureDate": "2025-06-01", "returnDate": "2025-06-10" },
+    { "title": "Trip Lisbon",   "departureDate": "2025-08-15", "returnDate": "2025-08-22" },
+    { "title": "Trip New York", "departureDate": "2025-11-01", "returnDate": "2025-11-10" }
+  ],
+  "sortingTrips": [
+    { "title": "Trip A", "departureDate": "2025-03-01", "returnDate": "2025-03-10" },
+    { "title": "Trip B", "departureDate": "2025-07-15", "returnDate": "2025-07-25" },
+    { "title": "Trip C", "departureDate": "2025-01-10", "returnDate": "2025-01-20" }
+  ],
+  "sortingTripLate": { "title": "Trip D Late", "departureDate": "2025-12-01", "returnDate": "2025-12-15" }
+}

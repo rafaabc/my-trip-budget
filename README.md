@@ -20,9 +20,12 @@ myTripBudget is a Node.js REST API that allows users to register, authenticate, 
 | jsonwebtoken | ^9.0.3 | JWT generation and verification |
 | bcryptjs | ^3.0.3 | Password hashing |
 | dotenv | ^17.4.2 | Environment variable loading |
-| swagger-ui-express | ^5.0.1 | Interactive API docs |
 | nodemon | ^3.1.14 | Dev auto-reload (devDependency) |
 | jest | ^29.7.0 | Unit test runner (devDependency) |
+| mocha | ^10.4.0 | API test runner (devDependency) |
+| chai | ^4.4.1 | Assertions for API tests (devDependency) |
+| supertest | ^6.3.4 | HTTP assertions for API tests (devDependency) |
+| mochawesome | ^7.1.3 | HTML test reports (devDependency) |
 
 ## Installation and Setup
 
@@ -59,11 +62,6 @@ myTripBudget is a Node.js REST API that allows users to register, authenticate, 
 
    Swagger UI will be available at `http://localhost:<PORT>/api-docs`.
 
-6. Run the unit tests:
-   ```bash
-   npm test
-   ```
-
 ## Features
 
 ### Users
@@ -93,21 +91,36 @@ All trip endpoints require a `Authorization: Bearer <token>` header.
 
 ## Tests
 
-Unit tests cover the service layer (business logic) using Jest. No real database or HTTP server is required.
+### Unit tests
+
+Cover the service layer (business logic) using Jest. No real database or HTTP server required.
 
 ```bash
-npm test          # run all unit tests
+npm test            # run all unit tests
 npm run test:watch  # watch mode
 ```
 
-Tests are located in `tests/unit/` and mirror the `src/services/` structure. Each test case is annotated with the User Story acceptance criterion it covers (e.g. `AC1`, `AC2`, `AC3`).
+Tests are in `tests/unit/`, mirroring `src/services/`. Each test case is annotated with the User Story AC it covers.
 
 | User Story | Coverage |
 |---|---|
 | US-01 / SCRUM-5 — User Registration | AC1 (201 created), AC2 (409 duplicate), AC3 (400 short password), BRs, required-field validation |
 | US-02 / SCRUM-6 — User Login | AC1 (200 + token), AC2/BR1 (401 invalid credentials), AC3 (400 missing fields), AC4 (JWT payload shape) |
-| US-03 / SCRUM-9 — Trip Registration | AC1 (201 created, userId scoped), AC2 (400 missing fields, 400 invalid date), AC3 (422 returnDate ≤ departureDate), BR1–BR3 |
-| US-04 / SCRUM-10 — Trip List | AC1 (200 + user-scoped list), AC2 (trip shape: title, departureDate, returnDate), AC4 (empty array), BR1 (only user's trips), BR2 (newest-first order) |
+| US-03 / SCRUM-9 — Trip Registration | AC1 (201 created, userId scoped), AC2 (400 missing/invalid), AC3 (422 returnDate ≤ departureDate), BR1–BR3 |
+| US-04 / SCRUM-10 — Trip List | AC1 (200 + user-scoped list), AC2 (trip shape), AC4 (empty array), BR1 (only user's trips), BR2 (newest-first) |
+
+### API tests
+
+Cover all 33 test cases (US-01 → US-04) against a real running server and MongoDB using Mocha + Chai + Supertest.
+
+**Pre-requisite:** server must be running (`npm run dev`) and MongoDB reachable.
+
+```bash
+npm run test:api         # spec reporter
+npm run test:api:report  # HTML report → reports/report.html
+```
+
+Tests are in `tests/api/`. All test data is prefixed `apitest_` and cleaned up automatically after each run.
 
 ## File Structure
 
@@ -135,12 +148,20 @@ myTripBudget/
 ├── resources/
 │   └── swagger.json           # OpenAPI specification
 ├── tests/
-│   └── unit/
-│       ├── user.service.test.js       # Unit tests for user registration (US-01)
-│       ├── user.login.service.test.js # Unit tests for user login (US-02)
-│       ├── trip.service.test.js       # Unit tests for trip registration (US-03)
-│       └── trip.list.service.test.js  # Unit tests for trip list (US-04)
+│   ├── unit/
+│   │   ├── user.service.test.js       # Unit tests — user registration (US-01)
+│   │   ├── user.login.service.test.js # Unit tests — user login (US-02)
+│   │   ├── trip.service.test.js       # Unit tests — trip registration (US-03)
+│   │   └── trip.list.service.test.js  # Unit tests — trip list (US-04)
+│   └── api/
+│       ├── fixtures/                  # Test data for data-driven tests
+│       └── test/
+│           ├── hooks/                 # Mocha root hooks (DB cleanup, auth setup)
+│           ├── helpers/               # Shared utilities (user creation, login)
+│           ├── users/                 # API tests — register (US-01), login (US-02)
+│           └── trips/                 # API tests — create (US-03), list (US-04)
 ├── .env.example               # Environment variable template
+├── .mocharc.js                # Mocha configuration
 └── package.json
 ```
 

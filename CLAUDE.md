@@ -40,13 +40,25 @@ Layered Express + Mongoose REST API. Request flow: `routes → controllers → s
 
 ## Testing Conventions
 
-- **Framework**: Jest (`testEnvironment: node`), no real DB or HTTP server in unit tests.
+### Unit tests (`tests/unit/`)
+- **Framework**: Jest (`testEnvironment: node`), no real DB or HTTP server.
 - **Location**: `tests/unit/<name>.service.test.js` mirroring `src/services/`.
-- **Scope**: unit tests cover the `services/` layer only. No E2E or HTTP integration tests.
+- **Scope**: service layer only.
 - **Mock pattern**: `jest.mock('../../src/models/<model>')` for Mongoose; `jest.mock('bcryptjs')` / `jest.mock('jsonwebtoken')` for external libs.
 - **Error assertions**: `expect(fn()).rejects.toMatchObject({ status: <n>, message: '<str>' })`.
 - **Naming**: each `it` description carries an AC suffix (e.g. `(AC1)`, `(AC2)`) for traceability to the User Story.
 - **Test files**: `user.service.test.js` (US-01), `user.login.service.test.js` (US-02), `trip.service.test.js` (US-03), `trip.list.service.test.js` (US-04).
+- **Run**: `npm test` (root).
+
+### API tests (`tests/api/`)
+- **Framework**: Mocha + Chai + Supertest; reports via Mochawesome.
+- **Scope**: full HTTP layer against a real running server and real MongoDB.
+- **Config**: `.mocharc.js` at repo root (`spec: tests/api/test/**/*.test.js`, `timeout: 30000`).
+- **Hooks**: `tests/api/test/hooks/cleanup.js` opens a Mongoose connection and deletes all test data (`username: /^apitest_/`) after the suite; `tests/api/test/hooks/auth.js` registers and logs in a default test user.
+- **Test data isolation**: every username created by the suite is prefixed `apitest_` — cleanup runs unconditionally via `mochaHooks.afterAll`.
+- **Fixtures**: `tests/api/fixtures/users.json` and `trips.json` hold payloads for data-driven loops.
+- **Run**: `npm run test:api` (spec reporter) · `npm run test:api:report` (HTML report → `reports/`).
+- **Pre-requisite**: API server must be running (`npm run dev`) and MongoDB reachable.
 
 ## User Story Workflow (Jira → Code)
 
