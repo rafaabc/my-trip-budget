@@ -2,6 +2,8 @@
 
 > REST API for managing personal trip records with JWT-based authentication.
 
+[![Backend Tests](https://github.com/rafaabc/myTripBudget/actions/workflows/backend.yml/badge.svg)](https://github.com/rafaabc/myTripBudget/actions/workflows/backend.yml)
+
 ## Description
 
 myTripBudget is a Node.js REST API that allows users to register, authenticate, and manage their travel trips. Built with Express.js and MongoDB (Mongoose), it provides a secure, token-protected interface for creating and listing trips. Interactive API documentation is available via Swagger UI.
